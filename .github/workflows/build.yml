@@ -1,27 +1,45 @@
 name: Build iOS IPA
+
 on: [push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: macos-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Select Xcode Version
+      - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
 
-      - name: Build Archive
-        run: |
-          # สร้างโปรเจกต์จำลองเพื่อให้ xcodebuild ทำงานได้ (เนื่องจากเรามีแค่ไฟล์ .swift)
-          xcodebuild -project iOSGameTranslator.xcodeproj -scheme iOSGameTranslator -archivePath build/iOSGameTranslator.xcarchive archive || echo "Build failed, check project structure"
+      - name: Show Xcode version
+        run: xcodebuild -version
 
-      - name: Export IPA
+      - name: Build Archive (No Signing)
         run: |
-          xcodebuild -exportArchive -archivePath build/iOSGameTranslator.xcarchive -exportOptionsPlist exportOptions.plist -exportPath build/ || echo "Export failed"
+          xcodebuild \
+            -project iOSGameTranslator.xcodeproj \
+            -scheme iOSGameTranslator \
+            -configuration Release \
+            -archivePath $PWD/build/iOSGameTranslator.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            DEVELOPMENT_TEAM="" \
+            archive
 
-      - name: Upload Artifact
+      - name: Export IPA (Unsigned)
+        run: |
+          xcodebuild \
+            -exportArchive \
+            -archivePath $PWD/build/iOSGameTranslator.xcarchive \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath $PWD/build/output
+
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-ipa
-          path: build/*.ipa
+          path: build/output/*.ipa
+          if-no-files-found: error
