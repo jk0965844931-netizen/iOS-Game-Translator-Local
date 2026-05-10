@@ -1,0 +1,18 @@
+name: iOSGameTranslator
+options:
+  bundleIdPrefix: com.local
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  iOSGameTranslator:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - iOSGameTranslator
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.local.iOSGameTranslator
+        CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: NO
