@@ -10,9 +10,12 @@ targets:
     deploymentTarget: "16.0"
     sources:
       - iOSGameTranslator
+    info:
+      path: iOSGameTranslator/Info.plist
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.local.iOSGameTranslator
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGN_IDENTITY: ""
         CODE_SIGNING_REQUIRED: NO
+        INFOPLIST_FILE: iOSGameTranslator/Info.plist
